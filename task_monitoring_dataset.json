@@ -49,15 +49,15 @@
       "border": "border-emerald-500",
       "text": "text-emerald-700",
       "dot": "bg-emerald-500",
-      "pill": "bg-emerald-100 text-emerald-800",
-      "chip": "bg-emerald-100 hover:bg-emerald-200"
+      "pill": "bg-emerald-100-text-emerald-800",
+      "chip": "bg-emerald-100-hover:bg-emerald-200"
     },
     "reject": {
       "border": "border-orange-500",
       "text": "text-orange-700",
       "dot": "bg-orange-500",
-      "pill": "bg-orange-100 text-orange-800",
-      "chip": "bg-orange-100 hover:bg-orange-200"
+      "pill": "bg-orange-100-text-orange-800",
+      "chip": "bg-orange-100-hover:bg-orange-200"
     }
   },
   "tasks": [
