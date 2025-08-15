@@ -13,7 +13,7 @@
   <div id="app" class="h-full"></div>
 
   <template id="sidebar-item">
-    <button class="w-full flex items-center gap-2 px-2 py-1 rounded hover : bg-slate-50">
+    <button class="w-full flex items-center gap-2 px-2 py-1 rounded-hover:bg-slate-50">
       <div class="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center text-sm shrink-0"></div>
       <div class="text-sm text-left truncate"></div>
     </button>
@@ -39,11 +39,11 @@
               <div class="w-2 h-2 rounded-full status-dot"></div>
               <h3 class="font-semibold title"></h3>
             </div>
-            <button class="p-2 rounded hover : bg-slate-100 close-btn" aria-label="Close">✕</button>
+            <button class="p-2 rounded-hover:bg-slate-100 close-btn" aria-label="Close">✕</button>
           </div>
           <div class="px-4 py-3 space-y-2 body"></div>
           <div class="px-4 py-3 border-t text-right">
-            <button class="px-3 py-1.5 text-sm rounded bg-slate-800 text-white hover : bg-slate-900 close-btn">Close</button>
+            <button class="px-3 py-1.5 text-sm rounded bg-slate-800 text-white-hover:bg-slate-900 close-btn">Close</button>
           </div>
         </div>
       </div>
@@ -100,7 +100,7 @@
           <!-- Sidebar -->
           <div id="sidebar" class="h-full border-r border-slate-200 w-64 transition-all duration-200 bg-white">
             <div class="flex items-center justify-between px-3 py-2 border-b">
-              <button id="collapseBtn" class="p-2 rounded hover : bg-slate-100" title="Toggle sidebar">
+              <button id="collapseBtn" class="p-2 rounded-hover:bg-slate-100" title="Toggle sidebar">
                 <div class="space-y-1">
                   <span class="block w-5 h-0.5 bg-slate-800"></span>
                   <span class="block w-5 h-0.5 bg-slate-800"></span>
@@ -111,7 +111,7 @@
               <div></div>
             </div>
             <div class="p-2">
-              <button id="toggleAll" class="w-full text-sm px-2 py-1 rounded border border-slate-300 hover : bg-slate-50 mb-2">Select All</button>
+              <button id="toggleAll" class="w-full text-sm px-2 py-1 rounded border border-slate-300-hover:bg-slate-50 mb-2">Select All</button>
               <div id="assigneeList" class="space-y-1"></div>
             </div>
           </div>
@@ -129,10 +129,10 @@
 
               <!-- Month Controls -->
               <div class="flex items-center gap-2">
-                <button id="prevMonth" class="px-2 py-1 rounded border border-slate-300 hover : bg-slate-50">Prev</button>
+                <button id="prevMonth" class="px-2 py-1 rounded border border-slate-300-hover:bg-slate-50">Prev</button>
                 <div id="monthLabel" class="text-sm font-semibold"></div>
-                <button id="nextMonth" class="px-2 py-1 rounded border border-slate-300 hover : bg-slate-50">Next</button>
-                <button id="jumpToday" class="ml-auto px-2 py-1 rounded border border-slate-300 hover : bg-slate-50">Today</button>
+                <button id="nextMonth" class="px-2 py-1 rounded border border-slate-300-hover:bg-slate-50">Next</button>
+                <button id="jumpToday" class="ml-auto px-2 py-1 rounded border border-slate-300-hover:bg-slate-50">Today</button>
               </div>
 
               <!-- Calendar -->
@@ -309,7 +309,7 @@
         card.innerHTML = `
           <div class="text-sm font-medium">${u.title}</div>
           <div class="text-xs text-slate-500">${u.start} • ${u.site}</div>
-          <button class="mt-2 text-xs px-2 py-1 rounded border border-slate-300 hover : bg-slate-50">Assign…</button>
+          <button class="mt-2 text-xs px-2 py-1 rounded border border-slate-300-hover:bg-slate-50">Assign…</button>
         `;
         box.appendChild(card);
       });
@@ -340,7 +340,7 @@
       State.validStatuses.forEach(s => {
         const sui = State.statusUI[s] || {};
         const btn = document.createElement('button');
-        btn.className = `text-sm px-3 py-1 rounded border ${sui.border || 'border-slate-300'} ${sui.text || 'text-slate-700'} hover : bg-slate-50`;
+        btn.className = `text-sm px-3 py-1 rounded border ${sui.border || 'border-slate-300'} ${sui.text || 'text-slate-700'}-hover:bg-slate-50`;
         btn.textContent = State.statusLabel[s] || s;
         btn.addEventListener('click', () => {
           task.status = s; // client-side update only
