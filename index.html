@@ -4,9 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Task Monitoring</title>
-  <script src="https : //cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    html, body { height :  100%; }
+    html, body { height: 100%; }
   </style>
 </head>
 <body class="h-full bg-slate-50 text-slate-800">
@@ -39,7 +39,7 @@
               <div class="w-2 h-2 rounded-full status-dot"></div>
               <h3 class="font-semibold title"></h3>
             </div>
-            <button class="p-2 rounded hover  :  bg-slate-100 close-btn" aria-label="Close">✕</button>
+            <button class="p-2 rounded hover : bg-slate-100 close-btn" aria-label="Close">✕</button>
           </div>
           <div class="px-4 py-3 space-y-2 body"></div>
           <div class="px-4 py-3 border-t text-right">
@@ -78,16 +78,16 @@
     // App State (plain JS)
     // -------------------------
     const State = {
-      staff :  [],
-      validStatuses :  [],
-      statusLabel :  {},
-      statusUI :  {},
-      tasks :  [], // dates as strings from JSON
-      unassigned :  [],
-      selectedAssignees :  new Set(),
-      sidebarCollapsed :  false,
+      staff: [],
+      validStatuses: [],
+      statusLabel: {},
+      statusUI: {},
+      tasks: [], // dates as strings from JSON
+      unassigned: [],
+      selectedAssignees: new Set(),
+      sidebarCollapsed: false,
       // month navigation (default current month)
-      monthCursor :  startOfMonth(today),
+      monthCursor: startOfMonth(today),
     };
 
     // -------------------------
@@ -118,7 +118,7 @@
 
           <!-- Main -->
           <div class="flex-1 overflow-auto">
-            <div class="p-3 sm : p-4 lg : p-6 space-y-4">
+            <div class="p-3 sm:p-4 lg:p-6 space-y-4">
               <div class="flex items-center justify-between">
                 <div>
                   <h1 class="text-lg font-semibold">Task Monitoring — JSON Powered</h1>
@@ -141,7 +141,7 @@
               <!-- Unassigned -->
               <div>
                 <div class="text-sm font-semibold mb-2">Unassigned</div>
-                <div id="unassigned" class="grid sm : grid-cols-2 lg : grid-cols-3 gap-2"></div>
+                <div id="unassigned" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-2"></div>
               </div>
             </div>
           </div>
@@ -214,7 +214,7 @@
       mount.innerHTML = '';
 
       const baseDate = State.monthCursor;
-      const monthLabel = baseDate.toLocaleString(undefined, { month :  'long', year :  'numeric' });
+      const monthLabel = baseDate.toLocaleString(undefined, { month: 'long', year: 'numeric' });
       document.querySelector('#monthLabel').textContent = monthLabel;
 
       const weeks = getWeeksForMonth(baseDate);
@@ -223,7 +223,7 @@
       const assigneeSet = State.selectedAssignees;
       const tasks = State.tasks
         .filter(t => assigneeSet.has(t.assigneeId))
-        .map(t => ({...t, start :  new Date(t.start), end :  new Date(t.end)}));
+        .map(t => ({...t, start: new Date(t.start), end: new Date(t.end)}));
 
       const wrapper = document.createElement('div');
       wrapper.className = 'border rounded-lg overflow-hidden';
@@ -246,7 +246,7 @@
         week.forEach((d, idx) => {
           const isToday = fmt(d) === fmt(today);
           const cell = document.createElement('div');
-          cell.className = `min-h-[5.25rem] border-r border-slate-200 p-1 ${isToday ? 'bg-yellow-50'  :  ''}`;
+          cell.className = `min-h-[5.25rem] border-r border-slate-200 p-1 ${isToday ? 'bg-yellow-50' : ''}`;
           cell.innerHTML = `<div class="text-[11px] text-slate-500">${d.getDate()}</div>`;
           weekRow.appendChild(cell);
         });
@@ -261,8 +261,8 @@
         const weekTasks = tasks.filter(t => !(t.end < w0 || t.start > w6));
 
         weekTasks.forEach(t => {
-          const start = t.start < w0 ? w0  :  t.start;
-          const end = t.end > w6 ? w6  :  t.end;
+          const start = t.start < w0 ? w0 : t.start;
+          const end = t.end > w6 ? w6 : t.end;
           const dayToCol = (d) => ((d.getDay()+6)%7)+1;
           const startCol = dayToCol(start);
           const endCol = dayToCol(end);
@@ -326,10 +326,10 @@
       const body = node.querySelector('.body');
       body.innerHTML = `
         <div class="text-sm text-slate-600 space-y-1">
-          <div><span class="font-semibold">Assignee : </span> ${(State.staff.find(s=>s.id===task.assigneeId)||{}).name || '—'}</div>
-          <div><span class="font-semibold">When : </span> ${task.start} → ${task.end}</div>
-          <div><span class="font-semibold">Status : </span> <span class="inline-flex px-2 py-0.5 rounded ${ui.pill || ''}">${State.statusLabel[task.status] || task.status}</span></div>
-          <div><span class="font-semibold">Site : </span> ${task.site}</div>
+          <div><span class="font-semibold">Assignee:</span> ${(State.staff.find(s=>s.id===task.assigneeId)||{}).name || '—'}</div>
+          <div><span class="font-semibold">When:</span> ${task.start} → ${task.end}</div>
+          <div><span class="font-semibold">Status:</span> <span class="inline-flex px-2 py-0.5 rounded ${ui.pill || ''}">${State.statusLabel[task.status] || task.status}</span></div>
+          <div><span class="font-semibold">Site:</span> ${task.site}</div>
         </div>
         <div class="pt-3">
           <div class="text-xs text-slate-500 mb-1">Quick actions</div>
@@ -370,7 +370,7 @@
     async function main(){
       buildAppShell();
 
-      // IMPORTANT :  place the JSON file next to this HTML as "task_monitoring_dataset.json"
+      // IMPORTANT: place the JSON file next to this HTML as "task_monitoring_dataset.json"
       // Or update the path below.
       const res = await fetch('./task_monitoring_dataset.json');
       const data = await res.json();
@@ -382,7 +382,7 @@
       State.tasks = (data.tasks || []).map(t => ({...t}));
       State.unassigned = data.unassigned || [];
 
-      // default :  select all assignees
+      // default: select all assignees
       State.selectedAssignees = new Set(State.staff.map(s=>s.id));
 
       renderAssigneeList();
