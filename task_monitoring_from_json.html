@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Task Monitoring — JSON Powered</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html, body { height: 100%; }
+  </style>
+</head>
+<body class="h-full bg-slate-50 text-slate-800">
+  <div id="app" class="h-full"></div>
+
+  <template id="sidebar-item">
+    <button class="w-full flex items-center gap-2 px-2 py-1 rounded hover:bg-slate-50">
+      <div class="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center text-sm shrink-0"></div>
+      <div class="text-sm text-left truncate"></div>
+    </button>
+  </template>
+
+  <template id="task-chip">
+    <div class="grid grid-cols-7 gap-0">
+      <div class="text-xs px-2 py-1 cursor-pointer border rounded truncate flex items-center gap-1">
+        <span class="w-1.5 h-1.5 rounded-full"></span>
+        <span class="truncate"></span>
+        <span class="ml-auto text-[10px] opacity-70"></span>
+      </div>
+    </div>
+  </template>
+
+  <template id="popover">
+    <div class="fixed inset-0 z-50">
+      <div class="absolute inset-0 bg-black/30 overlay"></div>
+      <div class="absolute inset-0 flex items-center justify-center p-4">
+        <div class="w-full max-w-md rounded-lg bg-white shadow-xl border border-slate-200">
+          <div class="flex items-center justify-between px-4 py-3 border-b">
+            <div class="flex items-center gap-2 title-wrap">
+              <div class="w-2 h-2 rounded-full status-dot"></div>
+              <h3 class="font-semibold title"></h3>
+            </div>
+            <button class="p-2 rounded hover:bg-slate-100 close-btn" aria-label="Close">✕</button>
+          </div>
+          <div class="px-4 py-3 space-y-2 body"></div>
+          <div class="px-4 py-3 border-t text-right">
+            <button class="px-3 py-1.5 text-sm rounded bg-slate-800 text-white hover:bg-slate-900 close-btn">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    // -------------------------
+    // Utilities
+    // -------------------------
+    const today = new Date();
+    const fmt = (d) => d.toISOString().slice(0,10);
+    const startOfMonth = (d) => new Date(d.getFullYear(), d.getMonth(), 1);
+    const endOfMonth   = (d) => new Date(d.getFullYear(), d.getMonth()+1, 0);
+    const addDays      = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate()+n);
+
+    function getWeeksForMonth(baseDate) {
+      const first = startOfMonth(baseDate);
+      const last = endOfMonth(baseDate);
+      const start = addDays(first, ((first.getDay()+6)%7) * -1); // Monday grid
+      const end = addDays(last, 6 - ((last.getDay()+6)%7));
+      const days = [];
+      for (let d = new Date(start); d <= end; d = addDays(d, 1)) days.push(new Date(d));
+      const weeks = [];
+      for (let i=0; i<days.length; i+=7) weeks.push(days.slice(i,i+7));
+      return weeks;
+    }
+
+    function initials(name){ return name.split(/\s+/).map(s=>s[0]?.toUpperCase()||"").slice(0,2).join(""); }
+
+    // -------------------------
+    // App State (plain JS)
+    // -------------------------
+    const State = {
+      staff: [],
+      validStatuses: [],
+      statusLabel: {},
+      statusUI: {},
+      tasks: [], // dates as strings from JSON
+      unassigned: [],
+      selectedAssignees: new Set(),
+      sidebarCollapsed: false,
+      // month navigation (default current month)
+      monthCursor: startOfMonth(today),
+    };
+
+    // -------------------------
+    // DOM Builders
+    // -------------------------
+    function buildAppShell(){
+      const root = document.getElementById('app');
+      root.innerHTML = `
+        <div class="h-full w-full flex">
+          <!-- Sidebar -->
+          <div id="sidebar" class="h-full border-r border-slate-200 w-64 transition-all duration-200 bg-white">
+            <div class="flex items-center justify-between px-3 py-2 border-b">
+              <button id="collapseBtn" class="p-2 rounded hover:bg-slate-100" title="Toggle sidebar">
+                <div class="space-y-1">
+                  <span class="block w-5 h-0.5 bg-slate-800"></span>
+                  <span class="block w-5 h-0.5 bg-slate-800"></span>
+                  <span class="block w-5 h-0.5 bg-slate-800"></span>
+                </div>
+              </button>
+              <div class="text-sm font-semibold label">Assignees</div>
+              <div></div>
+            </div>
+            <div class="p-2">
+              <button id="toggleAll" class="w-full text-sm px-2 py-1 rounded border border-slate-300 hover:bg-slate-50 mb-2">Select All</button>
+              <div id="assigneeList" class="space-y-1"></div>
+            </div>
+          </div>
+
+          <!-- Main -->
+          <div class="flex-1 overflow-auto">
+            <div class="p-3 sm:p-4 lg:p-6 space-y-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h1 class="text-lg font-semibold">Task Monitoring — JSON Powered</h1>
+                  <p class="text-sm text-slate-500">Use the sidebar to filter assignees. Click a chip to view/edit status (client-side only).</p>
+                </div>
+                <div id="legend" class="flex gap-2"></div>
+              </div>
+
+              <!-- Month Controls -->
+              <div class="flex items-center gap-2">
+                <button id="prevMonth" class="px-2 py-1 rounded border border-slate-300 hover:bg-slate-50">Prev</button>
+                <div id="monthLabel" class="text-sm font-semibold"></div>
+                <button id="nextMonth" class="px-2 py-1 rounded border border-slate-300 hover:bg-slate-50">Next</button>
+                <button id="jumpToday" class="ml-auto px-2 py-1 rounded border border-slate-300 hover:bg-slate-50">Today</button>
+              </div>
+
+              <!-- Calendar -->
+              <div id="calendar"></div>
+
+              <!-- Unassigned -->
+              <div>
+                <div class="text-sm font-semibold mb-2">Unassigned</div>
+                <div id="unassigned" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-2"></div>
+              </div>
+            </div>
+          </div>
+        </div>`;
+
+      // Sidebar collapse handler
+      const collapseBtn = root.querySelector('#collapseBtn');
+      const sidebar = root.querySelector('#sidebar');
+      collapseBtn.addEventListener('click', () => {
+        State.sidebarCollapsed = !State.sidebarCollapsed;
+        sidebar.classList.toggle('w-16', State.sidebarCollapsed);
+        sidebar.classList.toggle('w-64', !State.sidebarCollapsed);
+        sidebar.querySelector('.label').classList.toggle('hidden', State.sidebarCollapsed);
+        root.querySelector('#toggleAll').classList.toggle('hidden', State.sidebarCollapsed);
+        renderAssigneeList();
+      });
+
+      // Toggle all
+      root.querySelector('#toggleAll').addEventListener('click', () => {
+        if (State.selectedAssignees.size === State.staff.length) State.selectedAssignees.clear();
+        else State.staff.forEach(s => State.selectedAssignees.add(s.id));
+        renderAssigneeList();
+        render();
+      });
+
+      // Month nav
+      root.querySelector('#prevMonth').addEventListener('click', () => { State.monthCursor = new Date(State.monthCursor.getFullYear(), State.monthCursor.getMonth()-1, 1); render();});
+      root.querySelector('#nextMonth').addEventListener('click', () => { State.monthCursor = new Date(State.monthCursor.getFullYear(), State.monthCursor.getMonth()+1, 1); render();});
+      root.querySelector('#jumpToday').addEventListener('click', () => { State.monthCursor = startOfMonth(today); render();});
+    }
+
+    function renderLegend(){
+      const el = document.querySelector('#legend');
+      el.innerHTML = '';
+      State.validStatuses.forEach(s => {
+        const ui = State.statusUI[s];
+        const span = document.createElement('span');
+        span.className = `text-xs px-2 py-0.5 rounded border ${ui.border} ${ui.text} bg-white`;
+        span.textContent = State.statusLabel[s];
+        el.appendChild(span);
+      });
+    }
+
+    function renderAssigneeList(){
+      const list = document.querySelector('#assigneeList');
+      list.innerHTML = '';
+      const tpl = document.getElementById('sidebar-item');
+      State.staff.forEach(s => {
+        const node = tpl.content.firstElementChild.cloneNode(true);
+        const [avatar, label] = node.children;
+        avatar.textContent = initials(s.name);
+        label.textContent = s.name;
+        const active = State.selectedAssignees.has(s.id);
+        node.classList.toggle('bg-slate-100', active);
+        node.addEventListener('click', () => {
+          if (active) State.selectedAssignees.delete(s.id); else State.selectedAssignees.add(s.id);
+          renderAssigneeList();
+          render();
+        });
+        if (State.sidebarCollapsed) label.classList.add('hidden'); else label.classList.remove('hidden');
+        list.appendChild(node);
+      });
+      const toggleAllBtn = document.querySelector('#toggleAll');
+      if (State.selectedAssignees.size === State.staff.length) toggleAllBtn.textContent = 'Deselect All';
+      else toggleAllBtn.textContent = 'Select All';
+    }
+
+    function renderCalendar(){
+      const mount = document.querySelector('#calendar');
+      mount.innerHTML = '';
+
+      const baseDate = State.monthCursor;
+      const monthLabel = baseDate.toLocaleString(undefined, { month: 'long', year: 'numeric' });
+      document.querySelector('#monthLabel').textContent = monthLabel;
+
+      const weeks = getWeeksForMonth(baseDate);
+
+      // Filter tasks by selected assignees
+      const assigneeSet = State.selectedAssignees;
+      const tasks = State.tasks
+        .filter(t => assigneeSet.has(t.assigneeId))
+        .map(t => ({...t, start: new Date(t.start), end: new Date(t.end)}));
+
+      const wrapper = document.createElement('div');
+      wrapper.className = 'border rounded-lg overflow-hidden';
+      wrapper.innerHTML = `
+        <div class="flex items-center justify-between px-3 py-2 border-b bg-slate-50">
+          <div class="text-sm font-semibold">${monthLabel}</div>
+          <div class="grid grid-cols-7 gap-0 text-xs text-slate-500">
+            ${['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d=>`<div class='text-center px-2'>${d}</div>`).join('')}
+          </div>
+        </div>`;
+
+      const weeksContainer = document.createElement('div');
+      weeksContainer.className = 'divide-y divide-slate-200';
+
+      weeks.forEach((week, wi) => {
+        const weekRow = document.createElement('div');
+        weekRow.className = 'relative grid grid-cols-7 border-b border-slate-200';
+
+        // Day cells
+        week.forEach((d, idx) => {
+          const isToday = fmt(d) === fmt(today);
+          const cell = document.createElement('div');
+          cell.className = `min-h-[5.25rem] border-r border-slate-200 p-1 ${isToday ? 'bg-yellow-50' : ''}`;
+          cell.innerHTML = `<div class="text-[11px] text-slate-500">${d.getDate()}</div>`;
+          weekRow.appendChild(cell);
+        });
+
+        // Chips layer
+        const layer = document.createElement('div');
+        layer.className = 'absolute left-0 right-0 top-5 px-1';
+        const sc = document.createElement('div');
+        sc.className = 'max-h-28 overflow-y-auto pr-1 space-y-1';
+
+        const w0 = week[0], w6 = week[6];
+        const weekTasks = tasks.filter(t => !(t.end < w0 || t.start > w6));
+
+        weekTasks.forEach(t => {
+          const start = t.start < w0 ? w0 : t.start;
+          const end = t.end > w6 ? w6 : t.end;
+          const dayToCol = (d) => ((d.getDay()+6)%7)+1;
+          const startCol = dayToCol(start);
+          const endCol = dayToCol(end);
+          const span = Math.max(1, endCol - startCol + 1);
+          const ui = State.statusUI[t.status] || {};
+
+          const tpl = document.getElementById('task-chip');
+          const chipGrid = tpl.content.firstElementChild.cloneNode(true);
+          const chip = chipGrid.firstElementChild;
+          chip.classList.add(`col-start-${startCol}`);
+          chip.classList.add(`col-span-${span}`);
+          chip.classList.add(ui.chip || 'bg-slate-100');
+          chip.classList.add(ui.text || 'text-slate-700');
+          chip.classList.add('border');
+          chip.classList.add(ui.border || 'border-slate-300');
+          chip.title = `${t.title} • ${State.statusLabel[t.status] || t.status}`;
+
+          const dot = chip.querySelector('span');
+          dot.classList.add(ui.dot || 'bg-slate-400');
+
+          const [_, titleEl, right] = chip.children;
+          titleEl.textContent = t.title;
+          right.textContent = (State.staff.find(s => s.id===t.assigneeId)||{}).name || '—';
+
+          chip.addEventListener('click', () => openPopover(t));
+          sc.appendChild(chipGrid);
+        });
+
+        layer.appendChild(sc);
+        weekRow.appendChild(layer);
+        weeksContainer.appendChild(weekRow);
+      });
+
+      wrapper.appendChild(weeksContainer);
+      mount.appendChild(wrapper);
+    }
+
+    function renderUnassigned(){
+      const box = document.querySelector('#unassigned');
+      box.innerHTML = '';
+      State.unassigned.forEach(u => {
+        const card = document.createElement('div');
+        card.className = 'rounded border border-slate-200 bg-white p-2';
+        card.innerHTML = `
+          <div class="text-sm font-medium">${u.title}</div>
+          <div class="text-xs text-slate-500">${u.start} • ${u.site}</div>
+          <button class="mt-2 text-xs px-2 py-1 rounded border border-slate-300 hover:bg-slate-50">Assign…</button>
+        `;
+        box.appendChild(card);
+      });
+    }
+
+    function openPopover(task){
+      const tpl = document.getElementById('popover');
+      const node = tpl.content.firstElementChild.cloneNode(true);
+      const ui = State.statusUI[task.status] || {};
+
+      node.querySelector('.status-dot').classList.add(ui.dot || 'bg-slate-400');
+      node.querySelector('.title').textContent = task.title;
+
+      const body = node.querySelector('.body');
+      body.innerHTML = `
+        <div class="text-sm text-slate-600 space-y-1">
+          <div><span class="font-semibold">Assignee:</span> ${(State.staff.find(s=>s.id===task.assigneeId)||{}).name || '—'}</div>
+          <div><span class="font-semibold">When:</span> ${task.start} → ${task.end}</div>
+          <div><span class="font-semibold">Status:</span> <span class="inline-flex px-2 py-0.5 rounded ${ui.pill || ''}">${State.statusLabel[task.status] || task.status}</span></div>
+          <div><span class="font-semibold">Site:</span> ${task.site}</div>
+        </div>
+        <div class="pt-3">
+          <div class="text-xs text-slate-500 mb-1">Quick actions</div>
+          <div class="flex gap-2 flex-wrap qa"></div>
+        </div>`;
+
+      const qa = body.querySelector('.qa');
+      State.validStatuses.forEach(s => {
+        const sui = State.statusUI[s] || {};
+        const btn = document.createElement('button');
+        btn.className = `text-sm px-3 py-1 rounded border ${sui.border || 'border-slate-300'} ${sui.text || 'text-slate-700'} hover:bg-slate-50`;
+        btn.textContent = State.statusLabel[s] || s;
+        btn.addEventListener('click', () => {
+          task.status = s; // client-side update only
+          closePopover();
+          render();
+        });
+        qa.appendChild(btn);
+      });
+
+      node.querySelectorAll('.close-btn, .overlay').forEach(el => el.addEventListener('click', closePopover));
+      document.body.appendChild(node);
+
+      function closePopover(){
+        node.remove();
+      }
+    }
+
+    function render(){
+      renderLegend();
+      renderCalendar();
+      renderUnassigned();
+    }
+
+    // -------------------------
+    // Bootstrap
+    // -------------------------
+    async function main(){
+      buildAppShell();
+
+      // IMPORTANT: place the JSON file next to this HTML as "task_monitoring_dataset.json"
+      // Or update the path below.
+      const res = await fetch('./task_monitoring_dataset.json');
+      const data = await res.json();
+
+      State.staff = data.staff || [];
+      State.validStatuses = data.validStatuses || [];
+      State.statusLabel = data.statusLabel || {};
+      State.statusUI = data.statusUI || {};
+      State.tasks = (data.tasks || []).map(t => ({...t}));
+      State.unassigned = data.unassigned || [];
+
+      // default: select all assignees
+      State.selectedAssignees = new Set(State.staff.map(s=>s.id));
+
+      renderAssigneeList();
+      render();
+    }
+
+    main().catch(err => {
+      const root = document.getElementById('app');
+      root.innerHTML = `<div class='p-6 text-sm text-red-700 bg-red-50 border border-red-200 rounded'>Failed to load dataset. ${String(err)}</div>`;
+    });
+  </script>
+</body>
+</html>

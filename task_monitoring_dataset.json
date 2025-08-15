@@ -1,0 +1,547 @@
+{
+  "meta": {
+    "generatedAt": "2025-08-15T18:38:48Z",
+    "todayLocalish": "2025-08-15",
+    "currentMonth": "2025-08",
+    "nextMonth": "2025-09"
+  },
+  "staff": [
+    {
+      "id": "aida",
+      "name": "Aida"
+    },
+    {
+      "id": "khairun",
+      "name": "Khairun"
+    },
+    {
+      "id": "hafiz",
+      "name": "Hafiz"
+    },
+    {
+      "id": "lee",
+      "name": "Lee"
+    },
+    {
+      "id": "derek",
+      "name": "Derek"
+    }
+  ],
+  "validStatuses": [
+    "in_progress",
+    "completed",
+    "reject"
+  ],
+  "statusLabel": {
+    "in_progress": "In Progress",
+    "completed": "Completed",
+    "reject": "Reject"
+  },
+  "statusUI": {
+    "in_progress": {
+      "border": "border-amber-500",
+      "text": "text-amber-700",
+      "dot": "bg-amber-500",
+      "pill": "bg-amber-100 text-amber-800",
+      "chip": "bg-amber-100 hover:bg-amber-200"
+    },
+    "completed": {
+      "border": "border-emerald-500",
+      "text": "text-emerald-700",
+      "dot": "bg-emerald-500",
+      "pill": "bg-emerald-100 text-emerald-800",
+      "chip": "bg-emerald-100 hover:bg-emerald-200"
+    },
+    "reject": {
+      "border": "border-orange-500",
+      "text": "text-orange-700",
+      "dot": "bg-orange-500",
+      "pill": "bg-orange-100 text-orange-800",
+      "chip": "bg-orange-100 hover:bg-orange-200"
+    }
+  },
+  "tasks": [
+    {
+      "id": "T1",
+      "title": "Ticket Reconcile",
+      "assigneeId": "aida",
+      "start": "2025-08-02",
+      "end": "2025-08-05",
+      "status": "in_progress",
+      "site": "Site B"
+    },
+    {
+      "id": "T2",
+      "title": "CRM Update",
+      "assigneeId": "khairun",
+      "start": "2025-08-04",
+      "end": "2025-08-06",
+      "status": "completed",
+      "site": "Site C"
+    },
+    {
+      "id": "T3",
+      "title": "Plate Review",
+      "assigneeId": "hafiz",
+      "start": "2025-08-05",
+      "end": "2025-08-07",
+      "status": "completed",
+      "site": "Site D"
+    },
+    {
+      "id": "T4",
+      "title": "CRM Update",
+      "assigneeId": "lee",
+      "start": "2025-08-25",
+      "end": "2025-08-25",
+      "status": "reject",
+      "site": "Site E"
+    },
+    {
+      "id": "T5",
+      "title": "CRM Update",
+      "assigneeId": "derek",
+      "start": "2025-08-01",
+      "end": "2025-08-02",
+      "status": "reject",
+      "site": "Site F"
+    },
+    {
+      "id": "T6",
+      "title": "Network Check",
+      "assigneeId": "aida",
+      "start": "2025-08-16",
+      "end": "2025-08-19",
+      "status": "in_progress",
+      "site": "Site A"
+    },
+    {
+      "id": "T7",
+      "title": "Site A Audit",
+      "assigneeId": "khairun",
+      "start": "2025-09-27",
+      "end": "2025-09-28",
+      "status": "reject",
+      "site": "Site B"
+    },
+    {
+      "id": "T8",
+      "title": "Network Check",
+      "assigneeId": "hafiz",
+      "start": "2025-08-26",
+      "end": "2025-08-27",
+      "status": "in_progress",
+      "site": "Site C"
+    },
+    {
+      "id": "T9",
+      "title": "LPR Camera Align",
+      "assigneeId": "lee",
+      "start": "2025-08-08",
+      "end": "2025-08-09",
+      "status": "completed",
+      "site": "Site D"
+    },
+    {
+      "id": "T10",
+      "title": "LPR Camera Align",
+      "assigneeId": "derek",
+      "start": "2025-08-11",
+      "end": "2025-08-13",
+      "status": "completed",
+      "site": "Site E"
+    },
+    {
+      "id": "T11",
+      "title": "Onsite Visit",
+      "assigneeId": "aida",
+      "start": "2025-08-31",
+      "end": "2025-08-31",
+      "status": "in_progress",
+      "site": "Site F"
+    },
+    {
+      "id": "T12",
+      "title": "LPR Camera Align",
+      "assigneeId": "khairun",
+      "start": "2025-08-23",
+      "end": "2025-08-23",
+      "status": "in_progress",
+      "site": "Site A"
+    },
+    {
+      "id": "T13",
+      "title": "Kiosk Firmware",
+      "assigneeId": "hafiz",
+      "start": "2025-09-08",
+      "end": "2025-09-09",
+      "status": "reject",
+      "site": "Site B"
+    },
+    {
+      "id": "T14",
+      "title": "Network Check",
+      "assigneeId": "lee",
+      "start": "2025-08-13",
+      "end": "2025-08-14",
+      "status": "completed",
+      "site": "Site C"
+    },
+    {
+      "id": "T15",
+      "title": "Barrier Tuning",
+      "assigneeId": "derek",
+      "start": "2025-08-08",
+      "end": "2025-08-09",
+      "status": "completed",
+      "site": "Site D"
+    },
+    {
+      "id": "T16",
+      "title": "Kiosk Firmware",
+      "assigneeId": "aida",
+      "start": "2025-08-11",
+      "end": "2025-08-13",
+      "status": "completed",
+      "site": "Site E"
+    },
+    {
+      "id": "T17",
+      "title": "LPR Camera Align",
+      "assigneeId": "khairun",
+      "start": "2025-08-20",
+      "end": "2025-08-21",
+      "status": "reject",
+      "site": "Site F"
+    },
+    {
+      "id": "T18",
+      "title": "CRM Update",
+      "assigneeId": "hafiz",
+      "start": "2025-08-19",
+      "end": "2025-08-20",
+      "status": "in_progress",
+      "site": "Site A"
+    },
+    {
+      "id": "T19",
+      "title": "CRM Update",
+      "assigneeId": "lee",
+      "start": "2025-08-31",
+      "end": "2025-09-01",
+      "status": "reject",
+      "site": "Site B"
+    },
+    {
+      "id": "T20",
+      "title": "Plate Review",
+      "assigneeId": "derek",
+      "start": "2025-08-23",
+      "end": "2025-08-23",
+      "status": "in_progress",
+      "site": "Site C"
+    },
+    {
+      "id": "T21",
+      "title": "Ticket Reconcile",
+      "assigneeId": "aida",
+      "start": "2025-08-08",
+      "end": "2025-08-09",
+      "status": "completed",
+      "site": "Site D"
+    },
+    {
+      "id": "T22",
+      "title": "Barrier Tuning",
+      "assigneeId": "khairun",
+      "start": "2025-09-30",
+      "end": "2025-10-03",
+      "status": "in_progress",
+      "site": "Site E"
+    },
+    {
+      "id": "T23",
+      "title": "Plate Review",
+      "assigneeId": "hafiz",
+      "start": "2025-08-23",
+      "end": "2025-08-26",
+      "status": "in_progress",
+      "site": "Site F"
+    },
+    {
+      "id": "T24",
+      "title": "Kiosk Firmware",
+      "assigneeId": "lee",
+      "start": "2025-09-24",
+      "end": "2025-09-26",
+      "status": "in_progress",
+      "site": "Site A"
+    },
+    {
+      "id": "T25",
+      "title": "Onsite Visit",
+      "assigneeId": "derek",
+      "start": "2025-08-20",
+      "end": "2025-08-23",
+      "status": "reject",
+      "site": "Site B"
+    },
+    {
+      "id": "T26",
+      "title": "Network Check",
+      "assigneeId": "aida",
+      "start": "2025-08-11",
+      "end": "2025-08-11",
+      "status": "completed",
+      "site": "Site C"
+    },
+    {
+      "id": "T27",
+      "title": "SLA Report",
+      "assigneeId": "khairun",
+      "start": "2025-08-05",
+      "end": "2025-08-06",
+      "status": "reject",
+      "site": "Site D"
+    },
+    {
+      "id": "T28",
+      "title": "Network Check",
+      "assigneeId": "hafiz",
+      "start": "2025-08-08",
+      "end": "2025-08-09",
+      "status": "completed",
+      "site": "Site E"
+    },
+    {
+      "id": "T29",
+      "title": "Network Check",
+      "assigneeId": "lee",
+      "start": "2025-08-09",
+      "end": "2025-08-09",
+      "status": "completed",
+      "site": "Site F"
+    },
+    {
+      "id": "T30",
+      "title": "LPR Camera Align",
+      "assigneeId": "derek",
+      "start": "2025-08-06",
+      "end": "2025-08-09",
+      "status": "completed",
+      "site": "Site A"
+    },
+    {
+      "id": "T31",
+      "title": "Onsite Visit",
+      "assigneeId": "aida",
+      "start": "2025-08-13",
+      "end": "2025-08-14",
+      "status": "reject",
+      "site": "Site B"
+    },
+    {
+      "id": "T32",
+      "title": "LPR Camera Align",
+      "assigneeId": "khairun",
+      "start": "2025-08-13",
+      "end": "2025-08-13",
+      "status": "completed",
+      "site": "Site C"
+    },
+    {
+      "id": "T33",
+      "title": "CRM Update",
+      "assigneeId": "hafiz",
+      "start": "2025-09-28",
+      "end": "2025-10-01",
+      "status": "reject",
+      "site": "Site D"
+    },
+    {
+      "id": "T34",
+      "title": "CRM Update",
+      "assigneeId": "lee",
+      "start": "2025-08-01",
+      "end": "2025-08-04",
+      "status": "completed",
+      "site": "Site E"
+    },
+    {
+      "id": "T35",
+      "title": "Network Check",
+      "assigneeId": "derek",
+      "start": "2025-08-06",
+      "end": "2025-08-07",
+      "status": "in_progress",
+      "site": "Site F"
+    },
+    {
+      "id": "T36",
+      "title": "Plate Review",
+      "assigneeId": "aida",
+      "start": "2025-08-24",
+      "end": "2025-08-25",
+      "status": "reject",
+      "site": "Site A"
+    },
+    {
+      "id": "T37",
+      "title": "SLA Report",
+      "assigneeId": "khairun",
+      "start": "2025-08-19",
+      "end": "2025-08-20",
+      "status": "reject",
+      "site": "Site B"
+    },
+    {
+      "id": "T38",
+      "title": "Site A Audit",
+      "assigneeId": "hafiz",
+      "start": "2025-08-05",
+      "end": "2025-08-07",
+      "status": "completed",
+      "site": "Site C"
+    },
+    {
+      "id": "T39",
+      "title": "Ticket Reconcile",
+      "assigneeId": "lee",
+      "start": "2025-08-13",
+      "end": "2025-08-14",
+      "status": "in_progress",
+      "site": "Site D"
+    },
+    {
+      "id": "T40",
+      "title": "CRM Update",
+      "assigneeId": "derek",
+      "start": "2025-08-04",
+      "end": "2025-08-07",
+      "status": "completed",
+      "site": "Site E"
+    },
+    {
+      "id": "T41",
+      "title": "LPR Camera Align",
+      "assigneeId": "aida",
+      "start": "2025-09-11",
+      "end": "2025-09-14",
+      "status": "in_progress",
+      "site": "Site F"
+    },
+    {
+      "id": "T42",
+      "title": "Network Check",
+      "assigneeId": "khairun",
+      "start": "2025-08-12",
+      "end": "2025-08-13",
+      "status": "completed",
+      "site": "Site A"
+    },
+    {
+      "id": "T43",
+      "title": "SLA Report",
+      "assigneeId": "hafiz",
+      "start": "2025-08-12",
+      "end": "2025-08-12",
+      "status": "completed",
+      "site": "Site B"
+    },
+    {
+      "id": "T44",
+      "title": "Onsite Visit",
+      "assigneeId": "lee",
+      "start": "2025-08-11",
+      "end": "2025-08-13",
+      "status": "completed",
+      "site": "Site C"
+    },
+    {
+      "id": "T45",
+      "title": "Site A Audit",
+      "assigneeId": "derek",
+      "start": "2025-08-09",
+      "end": "2025-08-09",
+      "status": "completed",
+      "site": "Site D"
+    },
+    {
+      "id": "T46",
+      "title": "Site A Audit",
+      "assigneeId": "aida",
+      "start": "2025-08-21",
+      "end": "2025-08-24",
+      "status": "in_progress",
+      "site": "Site E"
+    },
+    {
+      "id": "T47",
+      "title": "Network Check",
+      "assigneeId": "khairun",
+      "start": "2025-08-24",
+      "end": "2025-08-27",
+      "status": "in_progress",
+      "site": "Site F"
+    },
+    {
+      "id": "T48",
+      "title": "Barrier Tuning",
+      "assigneeId": "hafiz",
+      "start": "2025-08-05",
+      "end": "2025-08-08",
+      "status": "completed",
+      "site": "Site A"
+    },
+    {
+      "id": "T49",
+      "title": "LPR Camera Align",
+      "assigneeId": "lee",
+      "start": "2025-09-08",
+      "end": "2025-09-09",
+      "status": "in_progress",
+      "site": "Site B"
+    },
+    {
+      "id": "T50",
+      "title": "Ticket Reconcile",
+      "assigneeId": "derek",
+      "start": "2025-08-18",
+      "end": "2025-08-20",
+      "status": "reject",
+      "site": "Site C"
+    }
+  ],
+  "unassigned": [
+    {
+      "id": "U1",
+      "title": "Unassigned 1",
+      "start": "2025-09-07",
+      "site": "Backlog"
+    },
+    {
+      "id": "U2",
+      "title": "Unassigned 2",
+      "start": "2025-08-04",
+      "site": "Backlog"
+    },
+    {
+      "id": "U3",
+      "title": "Unassigned 3",
+      "start": "2025-09-14",
+      "site": "Backlog"
+    },
+    {
+      "id": "U4",
+      "title": "Unassigned 4",
+      "start": "2025-09-08",
+      "site": "Backlog"
+    },
+    {
+      "id": "U5",
+      "title": "Unassigned 5",
+      "start": "2025-08-07",
+      "site": "Backlog"
+    }
+  ]
+}
