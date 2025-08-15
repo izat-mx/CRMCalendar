@@ -42,8 +42,8 @@
       "border": "border-amber-500",
       "text": "text-amber-700",
       "dot": "bg-amber-500",
-      "pill": "bg-amber-100 text-amber-800",
-      "chip": "bg-amber-100 hover:bg-amber-200"
+      "pill": "bg-amber-100-text-amber-800",
+      "chip": "bg-amber-100-hover:bg-amber-200"
     },
     "completed": {
       "border": "border-emerald-500",
